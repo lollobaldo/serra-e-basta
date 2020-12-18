@@ -1,9 +1,13 @@
-var gpiop = require('rpi-gpio').promise;
+const { Gpio } = require( 'onoff' );
 
-gpiop.setup(7, gpiop.DIR_OUT)
-  .then(() => {
-    return gpiop.write(5, true)
-  })
-  .catch((err) => {
-    console.log('Error: ', err.toString())
-  });
+// set BCM 4 pin as 'output'
+const ledOut = new Gpio( '5', 'out' );
+
+// current LED state
+let isLedOn = false;
+
+// run a infinite interval
+setInterval( () => {
+  ledOut.writeSync( isLedOn ? 0 : 1 ); // provide 1 or 0
+  isLedOn = !isLedOn; // toggle state
+}, 3000 ); // 3s
