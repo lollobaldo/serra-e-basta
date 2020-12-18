@@ -1,14 +1,19 @@
-const { Gpio } = require( 'onoff' );
+var Gpio = require('onoff').Gpio; //include onoff to interact with the GPIO
+var LED = new Gpio(5, 'out'); //use GPIO pin 4, and specify that it is output
+var blinkInterval = setInterval(blinkLED, 250); //run the blinkLED function every 250ms
 
-// set BCM 4 pin as 'output'
-const ledOut = new Gpio( '5', 'out' );
+function blinkLED() { //function to start blinking
+  if (LED.readSync() === 0) { //check the pin state, if the state is 0 (or off)
+    LED.writeSync(1); //set pin state to 1 (turn LED on)
+  } else {
+    LED.writeSync(0); //set pin state to 0 (turn LED off)
+  }
+}
 
-// current LED state
-let isLedOn = false;
+function endBlink() { //function to stop blinking
+  clearInterval(blinkInterval); // Stop blink intervals
+  LED.writeSync(0); // Turn LED off
+  LED.unexport(); // Unexport GPIO to free resources
+}
 
-// run a infinite interval
-setInterval( () => {
-  ledOut.writeSync( isLedOn ? 0 : 1 ); // provide 1 or 0
-  console.log(isLedOn);
-  isLedOn = !isLedOn; // toggle state
-}, 3000 ); // 3s
+setTimeout(endBlink, 5000); //stop blinking after 5 seconds
