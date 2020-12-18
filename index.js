@@ -9,5 +9,6 @@ let isLedOn = false;
 // run a infinite interval
 setInterval( () => {
   ledOut.writeSync( isLedOn ? 0 : 1 ); // provide 1 or 0
+  console.log(isLedOn);
   isLedOn = !isLedOn; // toggle state
 }, 3000 ); // 3s
